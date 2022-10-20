@@ -1,0 +1,33 @@
+CREATE TABLE Отзывы
+(
+    Id int PRIMARY KEY NOT NULL,
+    Отзыв text,
+	ДатаВремя datetime,
+	Id_товар int,
+	Id_user int
+);
+
+CREATE TABLE ЗаказанныйТовар
+(
+    Id int PRIMARY KEY NOT NULL,
+	Id_товар int, 
+);
+
+CREATE TABLE Заказы
+(
+    Id int PRIMARY KEY NOT NULL,
+	Дата datetime,
+	Статус bit,
+	Сумма int,
+	СпособОплаты nvarchar(15),
+	Id_заказТовар int,
+    Id_user int
+);
+
+CREATE TABLE Продажа
+(
+    Id int PRIMARY KEY NOT NULL,    
+	Количество int,	
+	ДатаПродажи datetime,
+	Id_товар int,
+);
