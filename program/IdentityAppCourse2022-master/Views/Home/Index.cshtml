@@ -11,8 +11,10 @@
     {
         <h2>Your role is Admin</h2>
     }
-    else
+    else if(User.IsInRole("Provider"))
     {
-        <h2>Your role is client or provider</h2>
+        <h2>Your role is provider</h2>
+    }else {
+        <h2>Your role is client</h2>
     }
 }

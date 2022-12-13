@@ -1,7 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+
+@{
+    var userClims = (ClaimsIdentity)User.Identity;
+    var userId = userClims?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +44,10 @@
                             </li>
                             } else if(User.IsInRole("Provider")){
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">Products</a>
+                                <a class="nav-link text-dark" asp-controller="Product" asp-route-id="@userId" asp-action="Index">Products</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">All Products</a>
                             </li>
                             }
                             <li class="nav-item">

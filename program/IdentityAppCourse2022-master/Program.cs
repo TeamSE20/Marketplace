@@ -6,6 +6,8 @@ using IdentityAppCourse2022.Models;
 using IdentityAppCourse2022.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["SecretKey"]);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

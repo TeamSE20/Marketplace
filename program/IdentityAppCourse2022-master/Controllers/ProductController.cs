@@ -17,10 +17,16 @@ namespace IdentityAppCourse2022.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? id)
         {
-            var products = _db.Product.ToList();
-            return View(products);
+            if(String.IsNullOrEmpty(id))
+            {
+                return View(_db.Product.ToList());
+            }
+            else
+            {
+                return View("AllProducts", _db.Product.Where(x => x.provider.Id == id).ToList());
+            }
         }
 
         [HttpGet]
@@ -72,7 +78,7 @@ namespace IdentityAppCourse2022.Controllers
                 //create
                 var categoryDB = _db.Category.Where(c => c.Id == product.CategorySelected).FirstOrDefault();
                 var providerDB = _db.AppUser.Where(p => p.Id == product.Provider).FirstOrDefault();
-                if(categoryDB != null && providerDB != null)
+                if (categoryDB != null && providerDB != null)
                 {
                     _db.Product.Add(new Product { Name = product.Name, Description = product.Description, Price = product.Price, category = categoryDB, provider = providerDB });
                     _db.SaveChanges();
