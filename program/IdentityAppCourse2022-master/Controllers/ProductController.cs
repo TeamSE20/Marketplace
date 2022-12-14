@@ -33,15 +33,19 @@ namespace IdentityAppCourse2022.Controllers
         [HttpGet]
         public ActionResult ViewProduct(Models.Product prod)
         {
-            var complex = _db.Product.FirstOrDefault(u => u.Id == prod.Id);
+            //var complex = _db.Product.Join(_db.AppUser, prov => prov.provider, pr => pr.Id, (piv) => new {piv}).FirstOrDefault(u => u.Id == prod.Id);
+            var complex = _db.Product.FirstOrDefault(m => m.Id == prod.Id);
             ProductViewModel speakerViewModel = new ProductViewModel();
             speakerViewModel.Id = complex.Id;
             speakerViewModel.Name = complex.Name;
             speakerViewModel.Description = complex.Description;
             speakerViewModel.Price = complex.Price;
             //var providerDB = _db.Product.Where(b => b.provider == complex.provider).FirstOrDefault();
+            var provider = _db.AppUser.FirstOrDefault(m => m.Id == complex.providerId);
+            speakerViewModel.Provider = provider.UserName;
             //speakerViewModel.Provider = prod.provider.UserName;
-            //speakerViewModel.CategorySelected = complex.category.Name;
+            var category = _db.Category.FirstOrDefault(m => m.Id == complex.categoryId);
+            speakerViewModel.CategorySelected = category.Name;
             speakerViewModel.ExistingImage = complex.ProfilePicture;
             return View(speakerViewModel);
         }
@@ -84,11 +88,6 @@ namespace IdentityAppCourse2022.Controllers
         {
             var products = _db.Product.ToList();
             var productExist = products.Where(p => p.Name == product.Name).FirstOrDefault();
-            if (productExist != null)
-            {
-                //error
-                return RedirectToAction(nameof(AllProducts));
-            }
             if (string.IsNullOrEmpty(product.Id))
             {
                 //create
@@ -97,7 +96,7 @@ namespace IdentityAppCourse2022.Controllers
                 var providerDB = _db.AppUser.Where(p => p.Id == product.Provider).FirstOrDefault();
                 if (categoryDB != null && providerDB != null)
                 {
-                    _db.Product.Add(new Models.Product { Name = product.Name, Description = product.Description, Price = product.Price, category = categoryDB, provider = providerDB, ProfilePicture = uniqueFileName });
+                    _db.Product.Add(new Models.Product { Name = product.Name, Description = product.Description, Price = product.Price, category = categoryDB, provider = providerDB, providerId=providerDB.Id, categoryId = categoryDB.Id, ProfilePicture = uniqueFileName });
                     _db.SaveChanges();
                 }
             }
@@ -121,6 +120,11 @@ namespace IdentityAppCourse2022.Controllers
                 }
                 _db.Product.Update(productDb);
                 _db.SaveChanges();
+            }
+                        if (productExist != null)
+            {
+                //error
+                return RedirectToAction(nameof(AllProducts));
             }
             return RedirectToAction(nameof(AllProducts));
 

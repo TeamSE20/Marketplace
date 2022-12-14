@@ -33,6 +33,9 @@ namespace IdentityAppCourse2022.Data
             builder.Entity<Product>()
                 .Ignore(p => p.CategoryList);
 
+            builder.Entity<Category>()
+                .HasMany(p => p.Products);
+
             builder.Entity<AppUser>()
                 .HasMany(p => p.products);
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityAppCourse2022.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221213195137_initial")]
-    partial class initial
+    [Migration("20221214073310_Third")]
+    partial class Third
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
