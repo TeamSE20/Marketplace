@@ -3,14 +3,13 @@
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
 @inject UserManager<AppUser> UserManager
-
 @{
     var title = "Create Product";
     var userClims = (ClaimsIdentity)User.Identity;
     var userId = userClims.FindFirst(ClaimTypes.NameIdentifier).Value;
 }
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     @if (Model != null && !String.IsNullOrEmpty(Model.Id))
     {
         title = "Edit Product";
@@ -53,7 +52,7 @@
                         <label asp-for="Description"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Description" class="form-control" autocomplete="off" />
+                        <textarea asp-for="Description" class="form-control" autocomplete="off" rows="10" cols="5"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -75,6 +74,31 @@
                         <span asp-validation-for="Provider" class="text-danger"></span>
                     </div>
                 </div>
+                @if (Model != null && !String.IsNullOrEmpty(Model.Id))
+                {
+                //update
+                    <div class="form-group">
+                        <label asp-for="SpeakerPicture" class="control-label"></label>
+                        <div class="custom-file">
+                            <input asp-for="SpeakerPicture" class="custom-file-input" />
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span asp-validation-for="SpeakerPicture" class="text-danger"></span>
+                        <img src="~/Uploads/@Model.ExistingImage" class="img-thumbnail" height="80" width="80" asp-append-version="true" />
+                    </div>
+                }
+                else
+                {
+                    //create
+                    <div class="form-group">
+                        <label asp-for="SpeakerPicture" class="control-label"></label>
+                        <div class="custom-file">
+                            <input asp-for="SpeakerPicture" class="custom-file-input" />
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span asp-validation-for="SpeakerPicture" class="text-danger"></span>
+                    </div>
+                }
                 <div class="form-group row py-2 ">
                     <div class="col-8 offset-4 row">
                         <div class="col">
@@ -94,6 +118,8 @@
                         </div>
                     </div>
                 </div>
+                
+                
             </div>
         </div>
     </div>

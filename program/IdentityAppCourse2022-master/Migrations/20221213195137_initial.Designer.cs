@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityAppCourse2022.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221109191900_first")]
-    partial class first
+    [Migration("20221213195137_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,12 +124,12 @@ namespace IdentityAppCourse2022.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("categoryId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("providerId")
                         .IsRequired()

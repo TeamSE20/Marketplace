@@ -1,0 +1,24 @@
+﻿@model ProductViewModel
+@using IdentityAppCourse2022.ViewModels
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Provider</h1>
+</div>
+<!-- Left Column / Headphones Image --></pre>
+<div class="left-column"><img src="~/Uploads/@Model.ProfilePicture" alt="" data-image="black" /> <img src="images/blue.png" alt="" data-image="blue" /> <img class="active" src="images/red.png" alt="" data-image="red" /></div>
+<pre> 
+
+  <!-- Right Column --></pre>
+<div class="right-column">
+    <!-- Product Description -->
+    <div class="product-description">
+        @Model.CategorySelected
+        <h1>@Model.Name</h1>
+        @Model.Description
+        </div>
+    <!-- Product Configuration -->
+
+    <!-- Product Pricing -->
+    <div class="product-price">@Model.Price $ <a class="cart-btn" href="#">Add to cart</a></div>
+</div>
+<pre>

@@ -7,7 +7,6 @@ using IdentityAppCourse2022.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace IdentityAppCourse2022.ViewModels
 {
-    public class ProductViewModel
+    public class ProductViewModel : EditImageViewModel
     {
         public string? Id { get; set; }
         [Required]
@@ -17,6 +17,8 @@ namespace IdentityAppCourse2022.ViewModels
 
         [Required]
         public int Price { get; set; }
+        [Display(Name = "Image")]
+        public string? ProfilePicture { get; set; }
 
         public string? Provider { get; set; }
 

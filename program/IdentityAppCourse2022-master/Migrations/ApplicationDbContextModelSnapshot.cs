@@ -122,12 +122,12 @@ namespace IdentityAppCourse2022.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("categoryId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("img")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("providerId")
                         .IsRequired()

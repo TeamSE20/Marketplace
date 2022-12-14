@@ -10,13 +10,15 @@ namespace IdentityAppCourse2022.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string? img { get; set; }
         public int Price { get; set; }
-
+        [Display(Name = "Image")]
+        public string? ProfilePicture { get; set; }
+        
         public AppUser provider { get; set; }
         public Category category { get; set; }
 
         public IEnumerable<SelectListItem>? CategoryList { get; set; }
+
 
     }
 }

@@ -24,6 +24,9 @@
                 <th>
                     Price
                 </th>
+                <th>
+                    Image
+                </th>
             </tr>
             @foreach (var product in Model)
             {
@@ -39,6 +42,9 @@
                     </td>
                     <td>
                         @product.Price
+                    </td>
+                    <td>
+                        <img src="~/Uploads/@product.ProfilePicture" class="img-thumbnail" height="100" width="100" asp-append-version="true" />
                     </td>
                 </tr>
             }
