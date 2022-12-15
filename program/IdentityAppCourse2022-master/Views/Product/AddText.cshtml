@@ -15,9 +15,9 @@
 <div class="right-column">
     <!-- Product Description -->
     <div class="product-description">
-        @Model.CategorySelected
+            @Model.CategorySelected
         <h1>@Model.Name</h1>
-        @Model.Description
+            @Model.Description
         </div>
     <div class="product-price">@Model.Price $ <a class="cart-btn" href="#">Add to cart</a></div>
 </div>
@@ -30,10 +30,10 @@
 <input type="submit"/>
 </div>
 <div>
-            @foreach(var review in Model.reviewList)
+            @foreach (var review in Model.reviewList)
             {
-                <div class="col-8">@review.Text</div>
+                    <div class="col-8">@review.Text</div>
             }
-            
+
 </div>
 </form>

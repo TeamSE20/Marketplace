@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdentityAppCourse2022.Migrations
 {
-    public partial class Third : Migration
+    public partial class milena : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,21 @@ namespace IdentityAppCourse2022.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    clientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    productId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    dateReview = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,8 +191,8 @@ namespace IdentityAppCourse2022.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    providerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    categoryId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    categoryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    providerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -265,6 +280,9 @@ namespace IdentityAppCourse2022.Migrations
 
             migrationBuilder.DropTable(
                 name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

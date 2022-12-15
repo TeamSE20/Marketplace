@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Stripe;
 using System.Numerics;
+using System.Security.Claims;
 
 namespace IdentityAppCourse2022.Controllers
 {
@@ -30,12 +31,30 @@ namespace IdentityAppCourse2022.Controllers
         {
              return View(_db.Product.ToList());
         }
-        [HttpGet]
-        public ActionResult ViewProduct(Models.Product prod)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddText(string Id, string Text)
         {
-            //var complex = _db.Product.Join(_db.AppUser, prov => prov.provider, pr => pr.Id, (piv) => new {piv}).FirstOrDefault(u => u.Id == prod.Id);
+            ClaimsPrincipal currentUser = this.User;
+
+            if (Text != null && User.IsInRole("Client"))
+            {
+                var review = new Models.Review();
+
+                {
+                    review.Text = Text;
+                    review.clientId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    review.productId = Id;
+                    review.dateReview = DateTime.Now;
+                }
+
+                _db.Reviews.Add(review);
+                _db.SaveChanges();
+            }
+            
+            var prod =_db.Product.FirstOrDefault(m => m.Id == Id);
             var complex = _db.Product.FirstOrDefault(m => m.Id == prod.Id);
-            ProductViewModel speakerViewModel = new ProductViewModel();
+            ReviewViewModel speakerViewModel = new ReviewViewModel() { reviewList = new List<Models.Review>() };
             speakerViewModel.Id = complex.Id;
             speakerViewModel.Name = complex.Name;
             speakerViewModel.Description = complex.Description;
@@ -47,6 +66,59 @@ namespace IdentityAppCourse2022.Controllers
             var category = _db.Category.FirstOrDefault(m => m.Id == complex.categoryId);
             speakerViewModel.CategorySelected = category.Name;
             speakerViewModel.ExistingImage = complex.ProfilePicture;
+            speakerViewModel.Text = null;
+            speakerViewModel.client = null;
+            //speakerViewModel.reviewList = null;
+            foreach (var review in _db.Reviews)
+            {
+                if (review.productId == speakerViewModel.Id)
+                {
+
+                    var view = new Models.Review();
+                    view.Id = review.Id;
+                    view.Text = review.Text;
+                    view.clientId = review.clientId;
+                    view.productId = review.productId;
+                    view.dateReview = review.dateReview;
+                    speakerViewModel.reviewList.Add(view);
+                }
+            }
+            return View(speakerViewModel);
+        }
+        [HttpGet]
+        public ActionResult ViewProduct(Models.Product prod)
+        {
+            //var complex = _db.Product.Join(_db.AppUser, prov => prov.provider, pr => pr.Id, (piv) => new {piv}).FirstOrDefault(u => u.Id == prod.Id);
+            var complex = _db.Product.FirstOrDefault(m => m.Id == prod.Id);
+            ReviewViewModel speakerViewModel = new ReviewViewModel() { reviewList = new List<Models.Review>() };
+            speakerViewModel.Id = complex.Id;
+            speakerViewModel.Name = complex.Name;
+            speakerViewModel.Description = complex.Description;
+            speakerViewModel.Price = complex.Price;
+            //var providerDB = _db.Product.Where(b => b.provider == complex.provider).FirstOrDefault();
+            var provider = _db.AppUser.FirstOrDefault(m => m.Id == complex.providerId);
+            speakerViewModel.Provider = provider.UserName;
+            //speakerViewModel.Provider = prod.provider.UserName;
+            var category = _db.Category.FirstOrDefault(m => m.Id == complex.categoryId);
+            speakerViewModel.CategorySelected = category.Name;
+            speakerViewModel.ExistingImage = complex.ProfilePicture;
+            speakerViewModel.Text = null;
+            speakerViewModel.client = null;
+            //speakerViewModel.reviewList = null;
+            foreach (var review in _db.Reviews)
+            {
+                if (review.productId == speakerViewModel.Id)
+                {
+
+                    var view = new Models.Review();
+                    view.Id = review.Id;
+                    view.Text = review.Text;
+                    view.clientId = review.clientId;
+                    view.productId = review.productId;
+                    view.dateReview = review.dateReview;
+                    speakerViewModel.reviewList.Add(view);
+                }
+            }
             return View(speakerViewModel);
         }
         [HttpGet]

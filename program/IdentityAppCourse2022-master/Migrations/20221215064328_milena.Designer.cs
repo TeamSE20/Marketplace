@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityAppCourse2022.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221214073310_Third")]
-    partial class Third
+    [Migration("20221215064328_milena")]
+    partial class milena
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,6 +142,32 @@ namespace IdentityAppCourse2022.Migrations
                     b.HasIndex("providerId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("IdentityAppCourse2022.Models.Review", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("clientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("dateReview")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("productId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -280,7 +306,7 @@ namespace IdentityAppCourse2022.Migrations
             modelBuilder.Entity("IdentityAppCourse2022.Models.Product", b =>
                 {
                     b.HasOne("IdentityAppCourse2022.Models.Category", "category")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -350,6 +376,11 @@ namespace IdentityAppCourse2022.Migrations
             modelBuilder.Entity("IdentityAppCourse2022.Models.AppUser", b =>
                 {
                     b.Navigation("products");
+                });
+
+            modelBuilder.Entity("IdentityAppCourse2022.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

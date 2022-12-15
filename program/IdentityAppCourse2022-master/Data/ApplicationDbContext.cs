@@ -11,7 +11,7 @@ namespace IdentityAppCourse2022.Data
         {
 
         }
-
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<Category> Category { get; set; }
 
