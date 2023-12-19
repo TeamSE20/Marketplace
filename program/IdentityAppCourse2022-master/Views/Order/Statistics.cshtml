@@ -1,0 +1,61 @@
+﻿@model dynamic
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Статистика заказов</title>
+    <!-- Подключение библиотеки Chart.js и стилей для графика -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Статистика заказов</h1>
+
+    <p>Общее количество заказов: @Model.TotalOrders</p>
+    <p>Общий доход: @Model.TotalRevenue кгс</p>
+    <p>Средняя стоимость заказа: @Model.AverageOrderValue кгс</p>
+    <p>Самый продаваемый товар: @Model.BestSellingProduct</p>
+
+    <!-- Элемент canvas для отображения графика -->
+    <canvas id="myChart"></canvas>
+
+    <!-- Скрипт для создания и настройки графика -->
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Orders', 'Total Revenue', 'Average Order Value'],
+                datasets: [{
+                    label: 'Statistics',
+                    data: [@Model.TotalOrders, @Model.TotalRevenue, @Model.AverageOrderValue],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -88,6 +88,8 @@ namespace IdentityAppCourse2022.Controllers
                 }
 
                 await _userManager.AddToRoleAsync(userDbValue, _db.Roles.FirstOrDefault(u => u.Id == user.RoleId).Name);
+                userDbValue.UserName = user.UserName;
+                await _userManager.UpdateAsync(userDbValue);
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

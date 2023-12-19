@@ -6,8 +6,6 @@ namespace IdentityAppCourse2022.Models
 {
     public class AppUser : IdentityUser
     {
-        public string? NickName { get; set; }
-        [NotMapped]
         public string? RoleId { get; set; }
         [NotMapped]
         public string? Role { get; set; }

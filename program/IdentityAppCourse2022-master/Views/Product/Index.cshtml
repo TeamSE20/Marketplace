@@ -1,13 +1,20 @@
 ﻿@model IEnumerable<Product>
 @using Microsoft.AspNetCore.Identity
-
+@{
+    var userCanEdit = User.HasClaim(c => c.Type == "Edit" && c.Value == "True");
+    var userCanCreate = User.HasClaim(c => c.Type == "Create" && c.Value == "True");
+    var userCanDelete = User.HasClaim(c => c.Type == "Delete" && c.Value == "True");
+}
 <br />
 <div class="row">
     <div class="col-6">
         <h2 class="text-primary">Products List </h2>
     </div>
     <div class="col-6 text-right">
-        <a asp-action="Upsert" asp-controller="Product" class="btn btn-primary">Create New Product</a>
+        @if (userCanCreate)
+        {
+            <a asp-action="Upsert" asp-controller="Product" class="btn btn-primary">Create New Product</a>
+        }
     </div>
 </div>
 <div class="p-4 border rounded">
@@ -40,7 +47,7 @@
                     <td>
                         @product.Description
                     </td>
-                    <td>
+                    <td data-price="@product.Price">
                         @product.Price
                     </td>
                     <td>
@@ -49,18 +56,55 @@
                 </tr>
                 <td>
                     <div class="text-center">
-                        <form asp-action="Delete" asp-controller="Product" asp-route-id="@product.Id">
-                            <a asp-action="Upsert" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-info text-white" style="cursor:pointer">
-                                Edit
-                            </a>
-                            <button type="submit"
+                        @if (userCanDelete)
+                        {
+                            <form asp-action="Delete" asp-controller="Product" asp-route-id="@product.Id">
+                                @if (userCanEdit)
+                                {
+                                    <a asp-action="Upsert" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-info text-white" style="cursor:pointer">
+                                        Edit
+                                    </a>
+                                }
+                                <button type="submit"
                             class="btn btn-danger">
-                                Delete
-                            </button>
-                        </form>
+                                    Delete
+                                </button>
+                            </form>
+                        }
                     </div>
                 </td>
             }
         </table>
+    }else {
+        <div>
+            <h1>
+                Пока у вас товаров нету!
+            </h1>
+        </div>
     }
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        calculateTotalPrice();
+    });
+
+    function calculateTotalPrice() {
+        var priceCells = document.querySelectorAll("td[data-price]"); // Находит все ячейки с атрибутом data-price
+        var total = 0;
+
+        priceCells.forEach(function (cell) {
+            var price = parseFloat(cell.getAttribute("data-price"));
+            total += price;
+        });
+
+        var totalCell = document.getElementById("total-price");
+        totalCell.textContent = "Total Costs: " + total.toFixed(2); // Округляем до двух знаков после запятой
+    }
+</script>
+<tr>
+    <td colspan="3">
+        <strong id="total-price"></strong>
+    </td>
+</tr>
+

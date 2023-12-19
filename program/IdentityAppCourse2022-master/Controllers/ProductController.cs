@@ -15,21 +15,30 @@ namespace IdentityAppCourse2022.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly AlmurutStoreDbContext _almurut;
+        private readonly AsiaStoreDbContext _asia;
+        private readonly KivanoDbContext _kivano;
+        private readonly SoftTechDbContext _softTech;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public ProductController(ApplicationDbContext db, IWebHostEnvironment hostEnvironment)
+        public ProductController(ApplicationDbContext db, AlmurutStoreDbContext almurut, KivanoDbContext kivano, SoftTechDbContext softTech, AsiaStoreDbContext asia, IWebHostEnvironment hostEnvironment)
         {
             _db = db;
+            _almurut = almurut;
+            _asia = asia;
+            _kivano = kivano;
+            _softTech = softTech;
             webHostEnvironment = hostEnvironment;
         }
         
         public IActionResult Index(string id)
         {
-            return View(_db.Product.Where(x => x.provider.Id == id).ToList());
+            var userClaims = User.Claims;
+            return View(_db.Product.Where(x => x.provider.Id == id && !x.IsDeleted).ToList());
         }
 
         public IActionResult AllProducts()
         {
-             return View(_db.Product.ToList());
+             return View(_db.Product.Where(x => x.IsDeleted == false).ToList());
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -170,6 +179,14 @@ namespace IdentityAppCourse2022.Controllers
                 {
                     _db.Product.Add(new Models.Product { Name = product.Name, Description = product.Description, Price = product.Price, category = categoryDB, provider = providerDB, providerId=providerDB.Id, categoryId = categoryDB.Id, ProfilePicture = uniqueFileName });
                     _db.SaveChanges();
+                    _almurut.Product.Add(new Models.SearchProduct { Name = product.Name, Description = product.Description, Price = product.Price, DisplayImage = uniqueFileName });
+                    _almurut.SaveChanges();
+                    _asia.Product.Add(new Models.SearchProduct { Name = product.Name, Description = product.Description, Price = product.Price, DisplayImage = uniqueFileName });
+                    _asia.SaveChanges();
+                    _kivano.Product.Add(new Models.SearchProduct { Name = product.Name, Description = product.Description, Price = product.Price, DisplayImage = uniqueFileName });
+                    _kivano.SaveChanges();
+                    _softTech.Product.Add(new Models.SearchProduct { Name = product.Name, Description = product.Description, Price = product.Price, DisplayImage = uniqueFileName });
+                    _softTech.SaveChanges();
                 }
             }
             else
@@ -201,8 +218,25 @@ namespace IdentityAppCourse2022.Controllers
             return RedirectToAction(nameof(AllProducts));
 
         }
-        
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "DeleteAccess")]
+        public ActionResult Delete(string id)
+        {
+            var productDb = _db.Product.FirstOrDefault(u => u.Id == id);
+            if (productDb == null)
+            {
+                //error
+                return RedirectToAction(nameof(Index));
+            }
+            productDb.IsDeleted = true;
+            _db.Product.Update(productDb);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+
         private string ProcessUploadedFile(ViewModels.ProductViewModel model)
         {
             string uniqueFileName = null;

@@ -13,6 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(e =>
     e.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<AlmurutStoreDbContext>(e =>
+    e.UseSqlServer(builder.Configuration.GetConnectionString("AlmurutConnection")));
+builder.Services.AddDbContext<AsiaStoreDbContext>(e =>
+    e.UseSqlServer(builder.Configuration.GetConnectionString("AsiaConnection")));
+builder.Services.AddDbContext<KivanoDbContext>(e =>
+    e.UseSqlServer(builder.Configuration.GetConnectionString("KivanoConnection")));
+builder.Services.AddDbContext<SoftTechDbContext>(e =>
+    e.UseSqlServer(builder.Configuration.GetConnectionString("SoftTechConnection")));
+
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ISendGridEmail, SendGridEmail>();
@@ -31,19 +41,12 @@ builder.Services.AddAuthentication()
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("AdminAndProvider", policy => policy.RequireRole("Admin").RequireRole("Provider"));
-    options.AddPolicy("UserAndAdmin", policy => policy.RequireRole("Admin").RequireRole("User"));
-    options.AddPolicy("Admin_CreateAccess", policy => policy.RequireRole("Admin").RequireClaim("create", "True"));
-    options.AddPolicy("Admin_Create_Edit_DeleteAccess", policy => policy.RequireRole("Admin").RequireClaim("create", "True")
-    .RequireClaim("edit", "True")
-    .RequireClaim("Delete", "True"));
-    options.AddPolicy("Admin_Create_Edit_DeleteAccess_OR_SuperAdmin", policy => policy.RequireAssertion(context =>
-    context.User.IsInRole("Admin") && context.User.HasClaim(c => c.Type == "Create" && c.Value == "True")
-                        && context.User.HasClaim(c => c.Type == "Edit" && c.Value == "True")
-                        && context.User.HasClaim(c => c.Type == "Delete" && c.Value == "True") 
-                        || context.User.IsInRole("SuperAdmin")));
-    options.AddPolicy("OnlySuperAdminChecker", policy => policy.Requirements.Add(new OnlyPokemonAuthorization()));
-    options.AddPolicy("FirstNameAuth", policy => policy.Requirements.Add(new NicknameRequirement("billy")));
+    options.AddPolicy("Employee", policy => policy.RequireRole("Employee"));
+    options.AddPolicy("User", policy => policy.RequireRole("User"));
+    options.AddPolicy("CreateAccess", policy => policy.RequireClaim("create", "True"));
+    options.AddPolicy("EditAccess", policy => policy.RequireClaim("edit", "True"));
+    options.AddPolicy("DeleteAccess", policy => policy.RequireClaim("delete", "True"));
+
 });
 builder.Services.Configure<IdentityOptions>(opt =>
 {
@@ -53,6 +56,8 @@ builder.Services.Configure<IdentityOptions>(opt =>
     opt.Lockout.MaxFailedAccessAttempts = 5;
     //opt.SignIn.RequireConfirmedAccount = true;
 });
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -23,47 +23,18 @@ namespace IdentityAppCourse2022.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Client,Admin")]
-        public IActionResult UserORAdminAccess()
+        [Authorize(Roles = "Employee")]
+        public IActionResult EmployeeAccess()
         {
             return View();
         }
 
-        [Authorize(Policy = "ClientAndAdmin")]
-        public IActionResult ClientANDAdminAccess()
-        {
-            return View();
-        }
-
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminAccess()
         {
             return View();
         }
 
-        [Authorize(Policy = "Admin_CreateAccess")]
-        public IActionResult Admin_CreateAccess()
-        {
-            return View();
-        }
-
-        [Authorize(Policy = "Admin_Create_Edit_DeleteAccess")]
-        public IActionResult Admin_Create_Edit_DeleteAccess()
-        {
-            return View();
-        }
-
-        [Authorize(Policy = "Admin_Create_Edit_DeleteAccess_OR_SuperAdmin")]
-        public IActionResult Admin_Create_Edit_DeleteAccess_OR_SuperAdmin()
-        {
-            return View();
-        }
-
-        [Authorize(Policy = "AdminWithMoreThan1000Days")]
-        public IActionResult OnlyAdminWithMoreThan1000Days()
-        {
-            return View();
-        }
 
         [Authorize(Policy = "FirstNameAuth")]
         public IActionResult FirstNameAuth()

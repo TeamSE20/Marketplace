@@ -1,5 +1,5 @@
-﻿using IdentityAppCourse2022.Models;
-using Microsoft.AspNetCore.Identity;
+﻿// ApplicationDbContext.cs
+using IdentityAppCourse2022.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +11,13 @@ namespace IdentityAppCourse2022.Data
         {
 
         }
+
         public DbSet<Review> Reviews { get; set; }
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<Category> Category { get; set; }
-
         public DbSet<Product> Product { get; set; }
+        public DbSet<Order> Orders { get; set; } // Добавлено
+        public DbSet<OrderItem> OrderItems { get; set; } // Добавлено
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -45,6 +47,17 @@ namespace IdentityAppCourse2022.Data
             builder.Entity<Product>()
                 .HasOne(c => c.provider);
 
-        }
+            builder.Entity<OrderItem>()
+                .HasOne(oi => oi.Product)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                    .HasMany(o => o.OrderItems);
+
+            // убираем каскадное удаление в OrderItem
+            builder.Entity<OrderItem>()
+                .HasOne(oi => oi.Order);
+      }
     }
 }

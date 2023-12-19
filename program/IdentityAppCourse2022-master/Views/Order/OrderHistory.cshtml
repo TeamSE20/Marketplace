@@ -1,0 +1,53 @@
+﻿<!-- Cart.cshtml -->
+@model List<IdentityAppCourse2022.Models.Order>
+
+<h2>Order History</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Client</th>
+            </tr>
+        </thead>
+        @{
+            int totalPrice = 0;
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        totalPrice += orderItem.Product.Price * orderItem.Quantity;
+                        <tr>
+                            <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@orderItem.Product.Name</td>
+                            <td>@orderItem.Product.Price</td>
+                            <td>@orderItem.Quantity</td>
+                            <td>@order.Client.UserName</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tr>
+                <td colspan="4"><strong>Total price:</strong></td>
+                <td><strong>@totalPrice</strong></td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>Order history is empty.</p>
+}
+
+<style>
+    .quantity-form {
+        display: inline-block;
+        margin-right: 5px;
+    }
+</style>

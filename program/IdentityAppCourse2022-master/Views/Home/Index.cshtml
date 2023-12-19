@@ -1,4 +1,76 @@
-﻿@model IEnumerable<Product>
+﻿@*@model IEnumerable<SearchProduct>
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<h1>Product List</h1>
+<form asp-action="Index" method="get">
+    <p>
+        <label for="searchString">Search: </label>
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+        <input type="submit" value="Search" />
+    </p>
+    <input type="hidden" name="sortOrder" value="@ViewData["CurrentSort"]" />
+</form>
+
+<div>
+    <label>Sort by Price:</label>
+    <a href="@Url.Action("Index", new { sortOrder = "price", searchString = ViewData["CurrentFilter"] })">Ascending</a> |
+    <a href="@Url.Action("Index", new { sortOrder = "price_desc", searchString = ViewData["CurrentFilter"] })">Descending</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Store Name</th>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayImage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoreName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) kgs
+                </td>
+                <td>
+                    <img src="~/Uploads/@item.DisplayImage" class="bd-placeholder-img card-img-top" width="100%" height="225" role="img" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" focusable="false">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+*@
+
+@model IEnumerable<Product>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,22 +78,24 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
-@if(User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
-    @if(User.IsInRole("Admin"))
+    @if (User.IsInRole("Admin"))
     {
         <h2>Your role is Admin</h2>
     }
-    else if(User.IsInRole("Provider"))
+    else if (User.IsInRole("Provider"))
     {
         <h2>Your role is provider</h2>
-    }else {
+    }
+    else
+    {
         <h2>Your role is client</h2>
     }
 }
 <div class="album py-5 bg-light">
     <div class="container">
-        
+
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             @foreach (var product in Model)
             {

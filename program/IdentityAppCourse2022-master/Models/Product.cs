@@ -10,6 +10,8 @@ namespace IdentityAppCourse2022.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
         public int Price { get; set; }
         [Display(Name = "Image")]
         public string? ProfilePicture { get; set; }
@@ -21,7 +23,6 @@ namespace IdentityAppCourse2022.Models
         public string categoryId {get; set;}
         public string providerId {get; set;}
         public IEnumerable<SelectListItem>? CategoryList { get; set; }
-
 
     }
 }
